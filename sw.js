@@ -1,4 +1,4 @@
-const CACHE='jenny-recuperacion-v5';
+const CACHE='jenny-recuperacion-v6';
 const ASSETS=['./index.html?v=5','./manifest.webmanifest?v=5','./icon-192.png','./icon-512.png'];
 
 self.addEventListener('message', event => {

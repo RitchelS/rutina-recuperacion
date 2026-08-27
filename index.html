@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="theme-color" content="#6fb6e8">
-<title>Mi Recuperación · Jenny Sojo · v5</title>
+<title>Mi Recuperación · Jenny Sojo · v6</title>
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icon-192.png">
 <meta name="mobile-web-app-capable" content="yes">
@@ -104,8 +104,11 @@ button{cursor:pointer}
 .done-chip{display:none;background:#e6f4fd;color:#397fae;font-size:11px;font-weight:800;padding:6px 9px;border-radius:999px}
 .exercise.done .done-chip{display:inline-flex}
 .sets{display:grid;gap:8px}
-.set-row{display:grid;grid-template-columns:58px 1fr 42px;gap:8px;align-items:center;background:#f7fbfe;border:1px solid #e1eef7;border-radius:14px;padding:8px}
-.set-row input{width:100%;border:1px solid #d5e8f5;border-radius:10px;padding:8px;background:#fff;text-align:center;color:var(--navy);font-weight:800}
+.set-row{display:grid;grid-template-columns:58px minmax(74px,1fr) minmax(84px,1fr) 66px 42px;gap:7px;align-items:center;background:#f7fbfe;border:1px solid #e1eef7;border-radius:14px;padding:8px}
+.set-row input,.set-row select{width:100%;border:1px solid #d5e8f5;border-radius:10px;padding:8px;background:#fff;text-align:center;color:var(--navy);font-weight:800}
+.set-field{display:grid;gap:3px}.set-field small{font-size:9px;color:var(--muted);font-weight:800;text-align:center;text-transform:uppercase;letter-spacing:.04em}
+.weight-unit{padding-left:4px!important;padding-right:4px!important}
+@media(max-width:520px){.set-row{grid-template-columns:52px 1fr 1fr 58px 38px;gap:5px;padding:7px}.set-row strong{font-size:11px}.set-row input,.set-row select{padding:8px 5px;font-size:12px}.check{width:34px;height:34px}}
 .check{width:38px;height:38px;border-radius:11px;border:2px solid #c4ddec;background:#fff;color:transparent;font-weight:900}
 .check.checked{background:linear-gradient(145deg,#75bce7,#4f9dd2);border-color:transparent;color:white}
 .note{width:100%;min-height:66px;resize:vertical;border:1px solid #d6e8f4;border-radius:13px;padding:10px;background:#fafdff;color:var(--navy);margin-top:9px}
@@ -155,7 +158,9 @@ button{cursor:pointer}
 .finish-card button{width:100%;margin-top:15px;border:0;border-radius:15px;padding:12px;background:linear-gradient(145deg,#78bee9,#4a99cf);color:white;font-weight:800}
 .bottom{position:fixed;left:50%;transform:translateX(-50%);bottom:0;width:min(760px,100%);background:rgba(255,255,255,.94);backdrop-filter:blur(14px);border-top:1px solid #dfeef8;padding:10px 16px calc(10px + env(safe-area-inset-bottom));display:grid;grid-template-columns:1fr 1fr;gap:8px}
 .nav{border:0;background:transparent;color:#7893a6;border-radius:13px;padding:8px;font-size:12px;font-weight:800}.nav.active{background:#e8f5fd;color:#3c82b1}
-.history-card{background:#fff;border:1px solid #d9ebf7;border-radius:20px;padding:15px;box-shadow:var(--shadow);margin-bottom:10px}.history-card h3{margin:0;color:var(--navy)}.history-card p{margin:6px 0 0;color:var(--muted);font-size:12px}
+.history-card{background:#fff;border:1px solid #d9ebf7;border-radius:20px;box-shadow:var(--shadow);margin-bottom:10px;overflow:hidden}.history-card h3{margin:0;color:var(--navy)}.history-card p{margin:6px 0 0;color:var(--muted);font-size:12px}
+.history-summary{padding:15px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:12px}.history-summary:hover{background:#f8fcff}.history-arrow{color:var(--blue2);font-weight:900;transition:.2s}.history-card.open .history-arrow{transform:rotate(180deg)}
+.history-detail{display:none;border-top:1px solid #e3eff7;padding:14px;background:#fbfdff}.history-card.open .history-detail{display:block}.history-exercise{background:#fff;border:1px solid #e1edf6;border-radius:15px;padding:12px;margin-bottom:10px}.history-exercise:last-child{margin-bottom:0}.history-exercise-title{display:flex;justify-content:space-between;gap:10px;align-items:center;font-weight:800;color:var(--navy);margin-bottom:8px}.history-status{font-size:10px;padding:4px 7px;border-radius:999px;background:#e8f5fd;color:#397fae;white-space:nowrap}.history-status.skipped{background:#f3f6f8;color:#7f919d}.history-set{display:grid;grid-template-columns:58px 1fr 1fr;gap:7px;padding:7px 0;border-top:1px solid #edf3f7;font-size:12px;align-items:center}.history-set:first-of-type{border-top:0}.history-set span{color:#647f91}.history-set strong{color:var(--navy)}.history-note{margin-top:8px;padding:9px 10px;background:#f1f8fd;border-radius:10px;font-size:11px;line-height:1.45;color:#58778a}.history-walk{margin-top:10px;padding:10px 11px;border-radius:12px;background:#eef8fe;color:#477995;font-size:12px;font-weight:700}
 .disclaimer{font-size:11px;color:#7f98a9;line-height:1.45;margin-top:10px}
 @media(max-width:470px){.week-grid{grid-template-columns:1fr}.hero h2{font-size:25px}}
 </style>
@@ -163,7 +168,7 @@ button{cursor:pointer}
 <body>
 <div class="app">
   <div class="topbar">
-    <div class="brand"><div class="logo">🩵</div><div><h1>Mi recuperación</h1><small>Jenny Sojo · v5</small></div></div>
+    <div class="brand"><div class="logo">🩵</div><div><h1>Mi recuperación</h1><small>Jenny Sojo · v6</small></div></div>
     <button class="home-btn" id="homeBtn">⌂</button>
   </div>
 
@@ -311,9 +316,20 @@ function today(){const d=new Date();return d.getFullYear()+"-"+String(d.getMonth
 function key(w){return selectedDate+"_w"+w}
 function save(){localStorage.setItem(STORAGE,JSON.stringify(data))}
 function newSession(w){
-  return {week:w,date:selectedDate,walkDone:false,exercises:routine[w].exercises.map(e=>({name:e.name,skipped:false,note:"",collapsed:false,sets:Array.from({length:e.sets},()=>({reps:e.reps,done:false}))}))}
+  return {week:w,date:selectedDate,walkDone:false,exercises:routine[w].exercises.map(e=>({name:e.name,skipped:false,note:"",collapsed:false,sets:Array.from({length:e.sets},()=>({reps:e.reps,weight:"",unit:"kg",done:false}))}))}
 }
-function getSession(w){if(!data.sessions[key(w)]){data.sessions[key(w)]=newSession(w);save()}return data.sessions[key(w)]}
+function normalizeSession(s){
+  if(!s||!Array.isArray(s.exercises))return s;
+  s.exercises.forEach(ex=>{
+    if(!Array.isArray(ex.sets))ex.sets=[];
+    ex.sets.forEach(st=>{
+      if(st.weight===undefined||st.weight===null)st.weight="";
+      if(!st.unit)st.unit="kg";
+    });
+  });
+  return s;
+}
+function getSession(w){if(!data.sessions[key(w)]){data.sessions[key(w)]=newSession(w);save()}return normalizeSession(data.sessions[key(w)])}
 function progress(w){
   const s=data.sessions[key(w)];let total=0,done=0;
   if(!s){routine[w].exercises.forEach(e=>total+=e.sets);return{done,total,pct:0}}
@@ -460,7 +476,7 @@ function renderWeek(){
     const card=document.createElement("div");
     card.className="exercise"+(complete?" done":"")+(collapsed?" collapsed":"")+(se.skipped?" skipped":"");
     let sets="";
-    se.sets.forEach((st,si)=>sets+=`<div class="set-row"><strong>Serie ${si+1}</strong><input value="${st.reps}" data-reps="${ei}-${si}" aria-label="repeticiones"><button class="check ${st.done?"checked":""}" data-check="${ei}-${si}">✓</button></div>`);
+    se.sets.forEach((st,si)=>sets+=`<div class="set-row"><strong>Serie ${si+1}</strong><label class="set-field"><small>Reps</small><input value="${st.reps}" data-reps="${ei}-${si}" aria-label="repeticiones serie ${si+1}"></label><label class="set-field"><small>Peso</small><input type="number" min="0" step="0.25" inputmode="decimal" value="${st.weight??""}" data-weight="${ei}-${si}" placeholder="0" aria-label="peso serie ${si+1}"></label><label class="set-field"><small>Unidad</small><select class="weight-unit" data-unit="${ei}-${si}" aria-label="unidad de peso serie ${si+1}"><option value="kg" ${st.unit!=="lb"?"selected":""}>kg</option><option value="lb" ${st.unit==="lb"?"selected":""}>lb</option></select></label><button class="check ${st.done?"checked":""}" data-check="${ei}-${si}">✓</button></div>`);
     card.innerHTML=`<div class="exercise-head" data-toggle="${ei}"><div><div class="exercise-title">${ex.name}</div><div class="exercise-sub">${ex.sets} series · ${ex.reps} reps</div></div><span class="done-chip">Completado ✨</span></div>
       <div class="summary">✓ Ejercicio completado · toca para revisar</div>
       <div class="exercise-body">
@@ -475,6 +491,8 @@ function renderWeek(){
     se.collapsed=se.sets.every(x=>x.done);save();renderWeek();
   });
   list.querySelectorAll("[data-reps]").forEach(inp=>inp.onchange=()=>{const [ei,si]=inp.dataset.reps.split("-").map(Number);s.exercises[ei].sets[si].reps=inp.value;save()});
+  list.querySelectorAll("[data-weight]").forEach(inp=>inp.oninput=()=>{const [ei,si]=inp.dataset.weight.split("-").map(Number);s.exercises[ei].sets[si].weight=inp.value;save()});
+  list.querySelectorAll("[data-unit]").forEach(sel=>sel.onchange=()=>{const [ei,si]=sel.dataset.unit.split("-").map(Number);s.exercises[ei].sets[si].unit=sel.value;save()});
   list.querySelectorAll("[data-note]").forEach(t=>t.oninput=()=>{s.exercises[+t.dataset.note].note=t.value;save()});
   list.querySelectorAll("[data-skip]").forEach(b=>b.onclick=()=>{const e=s.exercises[+b.dataset.skip];e.skipped=!e.skipped;e.collapsed=false;if(e.skipped)e.sets.forEach(x=>x.done=false);save();renderWeek()});
   list.querySelectorAll("[data-toggle]").forEach(h=>h.onclick=e=>{if(e.target.closest("button,input,textarea"))return;const ex=s.exercises[+h.dataset.toggle];if(ex.sets.every(x=>x.done)){ex.collapsed=!ex.collapsed;save();renderWeek()}});
@@ -517,9 +535,24 @@ function finish(){
   const v=rnd(verses);document.getElementById("verseMessage").textContent=`“${v.t}” — ${v.r}`;
   document.getElementById("finishModal").classList.add("show")
 }
+function esc(v){return String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]))}
 function renderHistory(){
   const b=document.getElementById("historyList");if(!data.history.length){b.innerHTML='<div class="info-card">Todavía no hay sesiones guardadas 🩵</div>';return}
-  b.innerHTML=[...data.history].reverse().map(s=>{const d=new Date((s.date||today())+"T12:00:00"),f=d.toLocaleDateString("es-CR",{weekday:"long",day:"2-digit",month:"long",year:"numeric"});return`<div class="history-card"><h3>Semana ${s.week}</h3><p>📅 ${f} · ${s.progress?.done||0}/${s.progress?.total||0} series · ${s.progress?.pct||0}%</p></div>`}).join("")
+  b.innerHTML=[...data.history].reverse().map((raw,idx)=>{
+    const s=normalizeSession(raw),r=routine[s.week],d=new Date((s.date||today())+"T12:00:00"),f=d.toLocaleDateString("es-CR",{weekday:"long",day:"2-digit",month:"long",year:"numeric"});
+    const exercises=(s.exercises||[]).map((ex,ei)=>{
+      const base=r?.exercises?.[ei];
+      const sets=(ex.sets||[]).map((st,si)=>{
+        const weight=st.weight!==""&&st.weight!==null&&st.weight!==undefined?`${esc(st.weight)} ${esc(st.unit||"kg")}`:"Sin peso registrado";
+        return `<div class="history-set"><strong>Serie ${si+1}${st.done?" ✓":""}</strong><span>${esc(st.reps)} reps</span><span>${weight}</span></div>`;
+      }).join("");
+      const note=ex.note?`<div class="history-note"><strong>Nota:</strong> ${esc(ex.note)}</div>`:"";
+      return `<div class="history-exercise"><div class="history-exercise-title"><span>${esc(ex.name||base?.name||`Ejercicio ${ei+1}`)}</span><span class="history-status ${ex.skipped?"skipped":""}">${ex.skipped?"Omitido":(ex.sets||[]).every(x=>x.done)?"Completado":"Parcial"}</span></div>${sets}${base?.note?`<div class="history-note"><strong>Indicación:</strong> ${esc(base.note)}</div>`:""}${note}</div>`;
+    }).join("");
+    const walk=r?.walk?`<div class="history-walk">🚶 ${esc(r.walk)} · ${s.walkDone?"Completada ✓":"No marcada"}</div>`:"";
+    return `<div class="history-card" data-history="${idx}"><div class="history-summary"><div><h3>Semana ${esc(s.week)} — ${esc((r?.title||"").split("—")[1]?.trim()||"")}</h3><p>📅 ${f} · ${s.progress?.done||0}/${s.progress?.total||0} series · ${s.progress?.pct||0}%</p></div><span class="history-arrow">⌄</span></div><div class="history-detail">${exercises}${walk}</div></div>`;
+  }).join("");
+  b.querySelectorAll(".history-summary").forEach(x=>x.onclick=()=>x.closest(".history-card").classList.toggle("open"));
 }
 function show(name){document.querySelectorAll(".screen").forEach(x=>x.classList.remove("active"));document.getElementById(name+"Screen").classList.add("active");document.querySelectorAll(".nav").forEach(x=>x.classList.toggle("active",x.dataset.nav===name));if(name==="home")renderWeeks();if(name==="history")renderHistory();window.scrollTo({top:0,behavior:"smooth"})}
 
