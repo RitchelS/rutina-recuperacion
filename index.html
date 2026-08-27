@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#6fb6e8">
+<title>Mi Recuperación · Jenny Sojo · v5</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icon-192.png">
+<meta name="mobile-web-app-capable" content="yes">
+<style>
+:root{
+  --bg:#f2f8fd;--card:#fff;--blue:#6fb6e8;--blue2:#3e8fca;--blue3:#d9eefc;
+  --navy:#28485f;--text:#486476;--muted:#7893a6;--green:#67b985;--yellow:#e1b84d;--red:#cf6e73;
+  --shadow:0 14px 34px rgba(57,111,150,.14);--radius:24px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;font-family:Inter,ui-rounded,"Segoe UI",system-ui,sans-serif;color:var(--text);
+  background:radial-gradient(circle at top left,#dff2ff 0,transparent 34%),
+             radial-gradient(circle at top right,#eaf7ff 0,transparent 30%),var(--bg);
+  min-height:100vh;
+}
+button,input,textarea{font:inherit}
+button{cursor:pointer}
+.app{max-width:760px;margin:auto;padding:18px 16px 110px;min-height:100vh}
+.topbar{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:16px}
+.brand{display:flex;gap:10px;align-items:center}
+.logo{width:48px;height:48px;border-radius:17px;display:grid;place-items:center;background:linear-gradient(145deg,#87c9f1,#4b9bd2);color:#fff;box-shadow:var(--shadow);font-size:22px}
+.brand h1{font-size:19px;color:var(--navy);margin:0}
+.brand small{display:block;margin-top:4px;color:var(--muted)}
+.home-btn{width:44px;height:44px;border:0;border-radius:14px;background:#fff;color:var(--blue2);box-shadow:var(--shadow);font-size:20px}
+.hero{
+  border-radius:28px;padding:22px;color:white;box-shadow:0 18px 40px rgba(57,117,160,.25);
+  background:linear-gradient(145deg,#79bee9,#438fca);position:relative;overflow:hidden;margin-bottom:16px
+}
+.hero:before,.hero:after{content:"";position:absolute;border-radius:50%;background:rgba(255,255,255,.14)}
+.hero:before{width:125px;height:125px;right:-25px;top:-35px}.hero:after{width:70px;height:70px;right:65px;bottom:-28px}
+.hero .eyebrow{text-transform:uppercase;letter-spacing:.12em;font-size:11px;opacity:.86}
+.hero h2{margin:7px 0;font-size:28px}.hero p{margin:0;line-height:1.48;opacity:.95}
+.screen{display:none}.screen.active{display:block}
+.week-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.week-card{
+  background:#fff;border:1px solid #d9ebf7;border-radius:24px;padding:18px;text-align:left;color:var(--text);
+  box-shadow:var(--shadow);min-height:160px
+}
+.week-card h3{margin:8px 0 4px;color:var(--navy);font-size:19px}
+.week-card p{margin:0;color:var(--muted);font-size:12px;line-height:1.4}
+.week-card .emoji{font-size:24px}
+.mini-progress{height:7px;background:#e8f3fa;border-radius:99px;overflow:hidden;margin-top:14px}
+.mini-progress span{display:block;height:100%;background:linear-gradient(90deg,#8bc9ef,#4f9fd4)}
+.pct{font-size:11px;font-weight:800;color:var(--blue2);margin-top:6px}
+.info-card,.week-head,.traffic-card,.memory-card{
+  background:#fff;border:1px solid #d9ebf7;border-radius:22px;padding:17px;box-shadow:var(--shadow);margin-bottom:14px
+}
+.week-head h2,.traffic-card h3,.memory-card h3{margin:0;color:var(--navy)}
+.date-card{
+  background:#fff;border:1px solid #d9ebf7;border-radius:20px;padding:14px 16px;
+  box-shadow:var(--shadow);margin-bottom:14px;
+}
+.date-card label{display:block;font-size:12px;color:var(--muted);font-weight:800;margin-bottom:7px}
+.date-card input{
+  width:100%;border:1px solid #d5e8f5;background:#fafdff;color:var(--navy);
+  border-radius:13px;padding:10px 12px;outline:none;font-weight:800;
+}
+
+.week-head p,.traffic-card p,.memory-card p{margin:5px 0 0;color:var(--muted);font-size:13px;line-height:1.45}
+.head-row{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}
+.back-btn{border:0;background:#e8f5fd;color:var(--blue2);width:42px;height:42px;border-radius:14px;font-size:20px}
+.progress-meta{display:flex;justify-content:space-between;margin-top:16px;font-size:12px;font-weight:800;color:var(--muted)}
+.progress-bar{height:10px;border-radius:99px;background:#e7f2f9;overflow:hidden;margin-top:7px}
+.progress-bar span{display:block;height:100%;background:linear-gradient(90deg,#8ecbf0,#4e9ed4);width:0}
+.exercise{
+  background:#fff;border:1px solid #d9ebf7;border-radius:22px;margin-bottom:12px;box-shadow:var(--shadow);overflow:hidden
+}
+.exercise.done{border-color:#9acdec}.exercise.skipped{opacity:.78;border-style:dashed}
+.exercise-head{display:flex;justify-content:space-between;gap:10px;padding:16px;align-items:center}
+.exercise-title{font-weight:800;color:var(--navy);font-size:16px}.exercise-sub{font-size:12px;color:var(--muted);margin-top:4px}
+.exercise-body{padding:0 14px 14px}
+.exercise-visual{
+  margin:0 0 10px;
+  border:1px solid #dcecf7;
+  border-radius:18px;
+  overflow:hidden;
+  background:linear-gradient(145deg,#f7fbff,#edf8ff);
+}
+.exercise-visual svg{display:block;width:100%;height:auto}
+.exercise-benefit{
+  margin:10px 0 12px;
+  padding:12px 13px;
+  background:#edf8ff;
+  border:1px solid #d7ebf8;
+  border-radius:15px;
+  color:#4b6f87;
+  font-size:12px;
+  line-height:1.48;
+}
+.exercise-benefit strong{color:#2f6f9c}
+
+.exercise.collapsed .exercise-body{display:none}
+.exercise.collapsed .summary{display:block}
+.summary{display:none;padding:0 16px 14px;font-size:12px;color:#64869d;font-weight:700}
+.done-chip{display:none;background:#e6f4fd;color:#397fae;font-size:11px;font-weight:800;padding:6px 9px;border-radius:999px}
+.exercise.done .done-chip{display:inline-flex}
+.sets{display:grid;gap:8px}
+.set-row{display:grid;grid-template-columns:58px 1fr 42px;gap:8px;align-items:center;background:#f7fbfe;border:1px solid #e1eef7;border-radius:14px;padding:8px}
+.set-row input{width:100%;border:1px solid #d5e8f5;border-radius:10px;padding:8px;background:#fff;text-align:center;color:var(--navy);font-weight:800}
+.check{width:38px;height:38px;border-radius:11px;border:2px solid #c4ddec;background:#fff;color:transparent;font-weight:900}
+.check.checked{background:linear-gradient(145deg,#75bce7,#4f9dd2);border-color:transparent;color:white}
+.note{width:100%;min-height:66px;resize:vertical;border:1px solid #d6e8f4;border-radius:13px;padding:10px;background:#fafdff;color:var(--navy);margin-top:9px}
+.skip{width:100%;margin-top:9px;border:1px solid #d2e7f4;border-radius:13px;padding:10px;background:#eef8fe;color:#3f80ab;font-weight:800}
+.skip.on{background:#dceefa}
+.walk-card{background:#fff;border:1px solid #d9ebf7;border-radius:20px;padding:14px;margin-bottom:12px;box-shadow:var(--shadow)}
+.walk-card label{display:flex;align-items:center;justify-content:space-between;gap:10px;color:var(--navy);font-weight:800}
+.walk-card input{width:24px;height:24px}
+.traffic{display:grid;gap:9px;margin-top:12px}
+.light{display:grid;grid-template-columns:22px 1fr;gap:10px;align-items:start;padding:10px;border-radius:14px;background:#f8fbfd;font-size:12px;line-height:1.4}
+.dot{width:18px;height:18px;border-radius:50%;margin-top:1px}.green{background:var(--green)}.yellow{background:var(--yellow)}.red{background:var(--red)}
+.actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
+.btn{border:0;border-radius:15px;padding:12px;font-weight:800}.primary{background:linear-gradient(145deg,#78bee9,#4a99cf);color:#fff}.soft{background:#e9f5fd;color:#3f83b1}
+
+.timer-fab{
+  position:fixed;
+  right:max(18px,calc((100vw - 760px)/2 + 18px));
+  bottom:88px;
+  width:58px;height:58px;border:0;border-radius:18px;
+  background:linear-gradient(145deg,#79bee9,#438fca);
+  color:white;font-size:22px;box-shadow:0 16px 35px rgba(57,117,160,.3);
+  z-index:35;
+}
+.timer-modal{
+  position:fixed;inset:0;background:rgba(38,67,87,.46);
+  display:none;align-items:flex-end;justify-content:center;padding:16px;z-index:80;
+}
+.timer-modal.show{display:flex}
+.timer-sheet{
+  width:min(760px,100%);background:#fff;border-radius:27px;padding:20px;
+  box-shadow:0 26px 70px rgba(45,78,101,.3);
+}
+.timer-sheet h3{margin:0;color:var(--navy);font-size:21px}
+.timer-sheet p{margin:5px 0 0;color:var(--muted);font-size:12px}
+.timer-display{text-align:center;font-size:50px;font-weight:900;color:var(--blue2);padding:19px 0 13px}
+.timer-presets{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.timer-presets button{
+  border:0;border-radius:13px;padding:11px;background:#e9f5fd;color:#3e83b2;font-weight:800;
+}
+.timer-controls{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:11px}
+
+.finish-modal{position:fixed;inset:0;background:rgba(38,67,87,.48);display:none;align-items:center;justify-content:center;padding:18px;z-index:50}
+.finish-modal.show{display:flex}.finish-card{width:min(560px,100%);background:#fff;border-radius:28px;padding:25px 20px;text-align:center;box-shadow:0 28px 75px rgba(45,78,101,.3)}
+.finish-card h3{color:var(--navy);font-size:25px;margin:8px 0}.finish-message{color:#547185;line-height:1.55;margin-top:10px}
+.daughter{margin-top:14px;padding:14px;background:#edf8ff;border-radius:17px;color:#3e7192;line-height:1.55;font-size:14px}
+.verse{margin-top:12px;padding:13px;background:#f4f9fd;border-radius:16px;color:#56788f;font-size:13px;line-height:1.5;font-style:italic}
+.finish-card button{width:100%;margin-top:15px;border:0;border-radius:15px;padding:12px;background:linear-gradient(145deg,#78bee9,#4a99cf);color:white;font-weight:800}
+.bottom{position:fixed;left:50%;transform:translateX(-50%);bottom:0;width:min(760px,100%);background:rgba(255,255,255,.94);backdrop-filter:blur(14px);border-top:1px solid #dfeef8;padding:10px 16px calc(10px + env(safe-area-inset-bottom));display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.nav{border:0;background:transparent;color:#7893a6;border-radius:13px;padding:8px;font-size:12px;font-weight:800}.nav.active{background:#e8f5fd;color:#3c82b1}
+.history-card{background:#fff;border:1px solid #d9ebf7;border-radius:20px;padding:15px;box-shadow:var(--shadow);margin-bottom:10px}.history-card h3{margin:0;color:var(--navy)}.history-card p{margin:6px 0 0;color:var(--muted);font-size:12px}
+.disclaimer{font-size:11px;color:#7f98a9;line-height:1.45;margin-top:10px}
+@media(max-width:470px){.week-grid{grid-template-columns:1fr}.hero h2{font-size:25px}}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="topbar">
+    <div class="brand"><div class="logo">🩵</div><div><h1>Mi recuperación</h1><small>Jenny Sojo · v5</small></div></div>
+    <button class="home-btn" id="homeBtn">⌂</button>
+  </div>
+
+  <section id="homeScreen" class="screen active">
+    <div class="hero">
+      <div class="eyebrow">Paso a paso</div>
+      <h2>Volver a sentirte fuerte 🩵</h2>
+      <p>Elige la semana que estás trabajando y registra cada sesión con calma, sin competir con nadie.</p>
+    </div>
+    <div class="info-card">
+      <strong style="color:var(--navy)">Importante</strong>
+      <div class="disclaimer">Esta app organiza la rutina indicada, pero no sustituye la valoración de un profesional. Si aparece dolor fuerte, síntomas nuevos o empeoramiento persistente, conviene detener la actividad y consultar con su fisioterapeuta o médico.</div>
+    </div>
+    <div id="weekGrid" class="week-grid"></div>
+  </section>
+
+  <section id="weekScreen" class="screen">
+    <div class="date-card">
+      <label for="workoutDate">📅 Fecha de la rutina</label>
+      <input type="date" id="workoutDate">
+    </div>
+    <div class="week-head">
+      <div class="head-row">
+        <div><h2 id="weekTitle"></h2><p id="weekDesc"></p></div>
+        <button class="back-btn" id="backBtn">←</button>
+      </div>
+      <div class="progress-meta"><span id="progressText"></span><span id="progressPct"></span></div>
+      <div class="progress-bar"><span id="progressBar"></span></div>
+    </div>
+    <div id="exerciseList"></div>
+    <div id="walkArea"></div>
+
+    <div class="traffic-card">
+      <h3>🚦 Regla para progresar</h3>
+      <div class="traffic">
+        <div class="light"><span class="dot green"></span><span><strong>Verde:</strong> molestia leve que desaparece al terminar → puedes continuar.</span></div>
+        <div class="light"><span class="dot yellow"></span><span><strong>Amarillo:</strong> dolor que aumenta durante el ejercicio o dura varias horas → reduce repeticiones/intensidad.</span></div>
+        <div class="light"><span class="dot red"></span><span><strong>Rojo:</strong> dolor fuerte, síntomas nuevos o empeoramiento marcado → detén el ejercicio y consulta.</span></div>
+      </div>
+    </div>
+
+    <div class="actions">
+      <button class="btn primary" id="finishBtn">✨ Terminar rutina</button>
+      <button class="btn soft" id="resetBtn">Reiniciar hoy</button>
+    </div>
+  </section>
+
+  <section id="historyScreen" class="screen">
+    <div class="hero"><div class="eyebrow">Historial</div><h2>Tus avances 🩵</h2><p>Cada sesión cuenta, incluso las más suaves.</p></div>
+    <div id="historyList"></div>
+  </section>
+</div>
+
+<nav class="bottom">
+  <button class="nav active" data-nav="home">⌂ Inicio</button>
+  <button class="nav" data-nav="history">✦ Historial</button>
+</nav>
+
+
+<button class="timer-fab" id="timerFab" aria-label="Cronómetro de descanso">⏱</button>
+
+<div class="timer-modal" id="timerModal">
+  <div class="timer-sheet">
+    <h3>Descanso 🩵</h3>
+    <p>Elige un tiempo y descansa antes de la siguiente serie.</p>
+    <div class="timer-display" id="timerDisplay">01:00</div>
+    <div class="timer-presets">
+      <button data-time="30">30 s</button>
+      <button data-time="60">60 s</button>
+      <button data-time="90">90 s</button>
+    </div>
+    <div class="timer-controls">
+      <button class="btn primary" id="timerStart">Iniciar</button>
+      <button class="btn soft" id="timerClose">Cerrar</button>
+    </div>
+  </div>
+</div>
+
+<div class="finish-modal" id="finishModal">
+  <div class="finish-card">
+    <div style="font-size:38px">🩵✨</div>
+    <h3 id="finishTitle">¡Muy bien, Jenny!</h3>
+    <div class="finish-message" id="finishMessage"></div>
+    <div class="daughter" id="daughterMessage"></div>
+    <div class="verse" id="verseMessage"></div>
+    <button id="finishClose">Guardar mi progreso ♡</button>
+  </div>
+</div>
+
+<script>
+const routine = {
+  1:{
+    title:"Semana 1 — Adaptación",
+    desc:"Rutina suave de adaptación. 1 vez al día, 5–6 días por semana.",
+    exercises:[
+      {name:"Puente",sets:2,reps:"8–10"},
+      {name:"Apertura de rodilla",sets:2,reps:"8–10"},
+      {name:"Elevación lateral",sets:2,reps:"8–10"},
+      {name:"Sentadilla con silla",sets:2,reps:"8",note:"Sin peso. Si lo indicado para ese día es solo 1 serie, puedes saltar la segunda."}
+    ],
+    objective:"Objetivo: terminar igual o mejor de como empezaste."
+  },
+  2:{
+    title:"Semana 2 — Fortalecimiento",
+    desc:"Si la primera semana no aumenta el dolor, avanza con calma.",
+    exercises:[
+      {name:"Puente",sets:2,reps:"12"},
+      {name:"Apertura de rodilla",sets:2,reps:"12"},
+      {name:"Elevación lateral",sets:2,reps:"10–12"},
+      {name:"Sentadilla",sets:2,reps:"10"}
+    ],
+    walk:"Caminata suave de 15–20 minutos"
+  },
+  3:{
+    title:"Semana 3 — Más resistencia",
+    desc:"Aumenta la resistencia sin perder control del movimiento.",
+    exercises:[
+      {name:"Puente",sets:3,reps:"10–12"},
+      {name:"Elevación lateral",sets:3,reps:"10"},
+      {name:"Sentadilla",sets:3,reps:"10"},
+      {name:"Puente con pausa",sets:3,reps:"10–12",note:"Mantén 3 segundos arriba."}
+    ],
+    walk:"Caminata de 20–30 minutos"
+  },
+  4:{
+    title:"Semana 4 — Preparación para volver a pesas",
+    desc:"Si llevas varias semanas sin crisis, mantén los ejercicios 3 veces por semana y vuelve a las pesas muy gradualmente.",
+    exercises:[
+      {name:"Puente",sets:3,reps:"10–12"},
+      {name:"Elevación lateral",sets:3,reps:"10"},
+      {name:"Sentadilla",sets:3,reps:"10"},
+      {name:"Puente con pausa",sets:3,reps:"10–12",note:"Mantén 3 segundos arriba."}
+    ],
+    walk:"Caminata de 20–30 minutos",
+    extra:"Si tu profesional ya autorizó volver a pesas: inicia muy ligero (aprox. 30–40% de lo que levantabas antes), prioriza ejercicios sentados o acostados y aumenta gradualmente."
+  }
+};
+
+const STORAGE="jennyRecovery_v1";
+let data=JSON.parse(localStorage.getItem(STORAGE)||'{"sessions":{},"history":[]}');
+let selectedWeek=null;
+let selectedDate=today();
+
+function today(){const d=new Date();return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0")}
+function key(w){return selectedDate+"_w"+w}
+function save(){localStorage.setItem(STORAGE,JSON.stringify(data))}
+function newSession(w){
+  return {week:w,date:selectedDate,walkDone:false,exercises:routine[w].exercises.map(e=>({name:e.name,skipped:false,note:"",collapsed:false,sets:Array.from({length:e.sets},()=>({reps:e.reps,done:false}))}))}
+}
+function getSession(w){if(!data.sessions[key(w)]){data.sessions[key(w)]=newSession(w);save()}return data.sessions[key(w)]}
+function progress(w){
+  const s=data.sessions[key(w)];let total=0,done=0;
+  if(!s){routine[w].exercises.forEach(e=>total+=e.sets);return{done,total,pct:0}}
+  s.exercises.forEach(e=>{if(e.skipped)return;e.sets.forEach(x=>{total++;if(x.done)done++})});
+  return{done,total,pct:total?Math.round(done/total*100):0}
+}
+function renderWeeks(){
+  const g=document.getElementById("weekGrid");g.innerHTML="";
+  [1,2,3,4].forEach(w=>{
+    const p=progress(w),b=document.createElement("button");b.className="week-card";
+    b.innerHTML=`<div class="emoji">${["🌤️","🌱","🌊","✨"][w-1]}</div><h3>Semana ${w}</h3><p>${routine[w].title.split("—")[1].trim()}</p><div class="mini-progress"><span style="width:${p.pct}%"></span></div><div class="pct">${p.pct}% completado hoy</div>`;
+    b.onclick=()=>openWeek(w);g.appendChild(b);
+  })
+}
+function openWeek(w){
+  selectedWeek=w;
+  const di=document.getElementById("workoutDate");
+  if(di) di.value=selectedDate;
+  getSession(w);
+  show("week");
+  renderWeek()
+}
+
+function exerciseHelp(name){
+  const n=name.toLowerCase();
+
+  if(n.includes("puente con pausa")){
+    return {
+      muscles:"Glúteos · parte posterior de las piernas · core",
+      benefit:"Puede ayudar a fortalecer glúteos y la musculatura que estabiliza la pelvis, trabajando con control y sin impacto. La pausa arriba aumenta el tiempo bajo tensión sin necesidad de usar mucho peso."
+    };
+  }
+  if(n==="puente"){
+    return {
+      muscles:"Glúteos · parte posterior de las piernas · core",
+      benefit:"Puede ayudar a recuperar fuerza en glúteos y mejorar el control de la pelvis con un movimiento suave y estable."
+    };
+  }
+  if(n.includes("apertura de rodilla")){
+    return {
+      muscles:"Glúteo medio · abductores de cadera",
+      benefit:"Puede ayudar a fortalecer la musculatura lateral de la cadera, importante para controlar mejor la pelvis al caminar y al estar de pie."
+    };
+  }
+  if(n.includes("elevación lateral")){
+    return {
+      muscles:"Glúteo medio · abductores de cadera",
+      benefit:"Puede ayudar a mejorar la estabilidad lateral de la cadera y el control de la pelvis durante actividades cotidianas."
+    };
+  }
+  if(n.includes("sentadilla con silla")){
+    return {
+      muscles:"Cuádriceps · glúteos · core",
+      benefit:"Practica de forma controlada el patrón de sentarse y levantarse. Puede ayudar a recuperar fuerza en piernas usando la silla como referencia y apoyo."
+    };
+  }
+  if(n==="sentadilla"){
+    return {
+      muscles:"Cuádriceps · glúteos · core",
+      benefit:"Puede ayudar a recuperar fuerza funcional de piernas y control al sentarse, levantarse y desplazarse, siempre dentro de un rango cómodo."
+    };
+  }
+  return {
+    muscles:"Trabajo de fuerza y control",
+    benefit:"Realízalo de forma lenta y controlada, respetando el rango que se sienta cómodo y las indicaciones de tu profesional."
+  };
+}
+
+function exerciseDrawing(name){
+  const n=name.toLowerCase();
+  const info=exerciseHelp(name);
+  const dark="#35566d", blue="#62ace0", light="#dff2ff", skin="#f2b38f", mat="#bfe0f3";
+
+  let figure="";
+  if(n.includes("puente")){
+    figure=`
+      <rect x="18" y="128" width="260" height="10" rx="5" fill="${mat}"/>
+      <circle cx="74" cy="92" r="14" fill="${skin}" stroke="${dark}" stroke-width="3"/>
+      <path d="M88 99 L126 108 L165 87 L206 109" stroke="${dark}" stroke-width="8" stroke-linecap="round" fill="none"/>
+      <path d="M126 108 L165 87" stroke="${blue}" stroke-width="12" stroke-linecap="round"/>
+      <path d="M206 109 L224 129 M165 87 L185 126" stroke="${dark}" stroke-width="7" stroke-linecap="round"/>
+      <path d="M89 101 L54 116" stroke="${dark}" stroke-width="6" stroke-linecap="round"/>
+      <circle cx="163" cy="88" r="17" fill="${light}" stroke="${blue}" stroke-width="3"/>
+      <text x="157" y="93" text-anchor="middle" font-size="10" fill="${dark}" font-weight="700">GLÚTEO</text>
+    `;
+  } else if(n.includes("apertura de rodilla")){
+    figure=`
+      <rect x="18" y="132" width="260" height="8" rx="4" fill="${mat}"/>
+      <circle cx="84" cy="74" r="14" fill="${skin}" stroke="${dark}" stroke-width="3"/>
+      <path d="M95 85 L132 104 L177 108" stroke="${dark}" stroke-width="8" stroke-linecap="round" fill="none"/>
+      <path d="M132 104 L178 82 M132 104 L181 125" stroke="${dark}" stroke-width="7" stroke-linecap="round"/>
+      <path d="M122 96 Q142 80 161 92" stroke="${blue}" stroke-width="12" stroke-linecap="round"/>
+      <path d="M100 93 L72 116" stroke="${dark}" stroke-width="6" stroke-linecap="round"/>
+      <circle cx="145" cy="92" r="17" fill="${light}" stroke="${blue}" stroke-width="3"/>
+      <text x="145" y="96" text-anchor="middle" font-size="9" fill="${dark}" font-weight="700">CADERA</text>
+    `;
+  } else if(n.includes("elevación lateral")){
+    figure=`
+      <rect x="18" y="133" width="260" height="8" rx="4" fill="${mat}"/>
+      <circle cx="78" cy="74" r="14" fill="${skin}" stroke="${dark}" stroke-width="3"/>
+      <path d="M91 84 L126 104 L171 111" stroke="${dark}" stroke-width="8" stroke-linecap="round" fill="none"/>
+      <path d="M126 104 L176 119" stroke="${dark}" stroke-width="7" stroke-linecap="round"/>
+      <path d="M126 104 L183 75" stroke="${blue}" stroke-width="9" stroke-linecap="round"/>
+      <path d="M95 91 L70 118" stroke="${dark}" stroke-width="6" stroke-linecap="round"/>
+      <circle cx="143" cy="98" r="17" fill="${light}" stroke="${blue}" stroke-width="3"/>
+      <text x="143" y="102" text-anchor="middle" font-size="9" fill="${dark}" font-weight="700">CADERA</text>
+    `;
+  } else {
+    figure=`
+      <rect x="208" y="82" width="42" height="55" rx="5" fill="${mat}" stroke="${dark}" stroke-width="3"/>
+      <circle cx="132" cy="55" r="14" fill="${skin}" stroke="${dark}" stroke-width="3"/>
+      <path d="M132 70 L132 105 M132 82 L105 94 M132 82 L158 94" stroke="${dark}" stroke-width="7" stroke-linecap="round"/>
+      <path d="M132 105 L105 128 M132 105 L164 128" stroke="${blue}" stroke-width="9" stroke-linecap="round"/>
+      <circle cx="132" cy="102" r="18" fill="${light}" stroke="${blue}" stroke-width="3"/>
+      <text x="132" y="106" text-anchor="middle" font-size="9" fill="${dark}" font-weight="700">PIERNAS</text>
+    `;
+  }
+
+  const safeName=name.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+  return `<svg viewBox="0 0 420 170" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="${safeName}">
+    <rect width="420" height="170" rx="18" fill="#f8fcff"/>
+    <g transform="translate(10 8)">${figure}</g>
+    <g transform="translate(295 45)">
+      <text x="0" y="0" font-size="12" fill="${blue}" font-weight="800">TRABAJA</text>
+      <foreignObject x="0" y="12" width="112" height="100">
+        <div xmlns="http://www.w3.org/1999/xhtml" style="font-family:Arial,sans-serif;color:${dark};font-size:12px;line-height:1.35;font-weight:700;">
+          ${info.muscles}
+        </div>
+      </foreignObject>
+    </g>
+  </svg>`;
+}
+
+function renderWeek(){
+  document.getElementById("workoutDate").value=selectedDate;
+  const r=routine[selectedWeek],s=getSession(selectedWeek);
+  document.getElementById("weekTitle").textContent=r.title;
+  document.getElementById("weekDesc").textContent=r.desc;
+  const list=document.getElementById("exerciseList");list.innerHTML="";
+  if(r.objective){const x=document.createElement("div");x.className="info-card";x.innerHTML=`<strong style="color:var(--navy)">${r.objective}</strong>`;list.appendChild(x)}
+  if(r.extra){const x=document.createElement("div");x.className="info-card";x.innerHTML=`<strong style="color:var(--navy)">Preparación para volver a pesas</strong><div class="disclaimer">${r.extra}</div>`;list.appendChild(x)}
+  r.exercises.forEach((ex,ei)=>{
+    const se=s.exercises[ei],complete=se.sets.every(x=>x.done),collapsed=complete&&se.collapsed;
+    const card=document.createElement("div");
+    card.className="exercise"+(complete?" done":"")+(collapsed?" collapsed":"")+(se.skipped?" skipped":"");
+    let sets="";
+    se.sets.forEach((st,si)=>sets+=`<div class="set-row"><strong>Serie ${si+1}</strong><input value="${st.reps}" data-reps="${ei}-${si}" aria-label="repeticiones"><button class="check ${st.done?"checked":""}" data-check="${ei}-${si}">✓</button></div>`);
+    card.innerHTML=`<div class="exercise-head" data-toggle="${ei}"><div><div class="exercise-title">${ex.name}</div><div class="exercise-sub">${ex.sets} series · ${ex.reps} reps</div></div><span class="done-chip">Completado ✨</span></div>
+      <div class="summary">✓ Ejercicio completado · toca para revisar</div>
+      <div class="exercise-body">
+        <div class="exercise-visual">${exerciseDrawing(ex.name)}</div>
+        <div class="exercise-benefit"><strong>🩵 ¿En qué te ayuda?</strong><br>${exerciseHelp(ex.name).benefit}</div>
+        ${ex.note?`<div class="disclaimer" style="margin-bottom:8px">${ex.note}</div>`:""}
+        <div class="sets">${sets}</div><textarea class="note" data-note="${ei}" placeholder="Nota opcional: molestia, cómo te sentiste, etc.">${se.note||""}</textarea><button class="skip ${se.skipped?"on":""}" data-skip="${ei}">${se.skipped?"↩️ Volver a incluir":"⏭️ Saltar ejercicio"}</button></div>`;
+    list.appendChild(card);
+  });
+  list.querySelectorAll("[data-check]").forEach(btn=>btn.onclick=()=>{
+    const [ei,si]=btn.dataset.check.split("-").map(Number),se=s.exercises[ei],st=se.sets[si];st.done=!st.done;
+    se.collapsed=se.sets.every(x=>x.done);save();renderWeek();
+  });
+  list.querySelectorAll("[data-reps]").forEach(inp=>inp.onchange=()=>{const [ei,si]=inp.dataset.reps.split("-").map(Number);s.exercises[ei].sets[si].reps=inp.value;save()});
+  list.querySelectorAll("[data-note]").forEach(t=>t.oninput=()=>{s.exercises[+t.dataset.note].note=t.value;save()});
+  list.querySelectorAll("[data-skip]").forEach(b=>b.onclick=()=>{const e=s.exercises[+b.dataset.skip];e.skipped=!e.skipped;e.collapsed=false;if(e.skipped)e.sets.forEach(x=>x.done=false);save();renderWeek()});
+  list.querySelectorAll("[data-toggle]").forEach(h=>h.onclick=e=>{if(e.target.closest("button,input,textarea"))return;const ex=s.exercises[+h.dataset.toggle];if(ex.sets.every(x=>x.done)){ex.collapsed=!ex.collapsed;save();renderWeek()}});
+  const wa=document.getElementById("walkArea");wa.innerHTML=r.walk?`<div class="walk-card"><label><span>🚶 ${r.walk}</span><input type="checkbox" id="walkCheck" ${s.walkDone?"checked":""}></label></div>`:"";
+  if(r.walk)document.getElementById("walkCheck").onchange=e=>{s.walkDone=e.target.checked;save()};
+  const p=progress(selectedWeek);document.getElementById("progressText").textContent=`${p.done} de ${p.total} series`;document.getElementById("progressPct").textContent=p.pct+"%";document.getElementById("progressBar").style.width=p.pct+"%";
+}
+const motivation=[
+  "Hoy avanzaste a tu ritmo, y eso es exactamente lo que importa.",
+  "Cada movimiento suave y consciente también es progreso.",
+  "No necesitas correr para avanzar. La constancia también se construye despacio.",
+  "Tu cuerpo merece paciencia, cuidado y confianza. Hoy le diste las tres.",
+  "Un día a la vez, una repetición a la vez. Vas muy bien.",
+  "Ser constante también es una forma de ser valiente.",
+  "Hoy elegiste cuidarte. Ese esfuerzo vale muchísimo.",
+  "Cada sesión suma, incluso cuando parece pequeña."
+];
+const daughter=[
+  "Mami, estoy demasiado orgullosa de ti. Juntas vamos a lograr cosas increíbles. Te amo con todo mi corazón. 🩵",
+  "Mami, verte esforzarte me llena de orgullo. Vamos juntas, paso a paso, y vamos a llegar muchísimo más lejos de lo que imaginamos. Te amo con todo mi corazón. 🩵",
+  "Estoy muy orgullosa de ti, mami. No importa si hoy fue poquito: lo importante es que seguimos avanzando juntas. Vamos a lograr cosas increíbles. Te amo muchísimo. 🩵",
+  "Mami, cada día que eliges cuidarte me hace sentir aún más orgullosa de ti. Estoy contigo en cada paso. Juntas podemos con esto y con muchísimo más. Te amo con todo mi corazón. 🩵"
+];
+const verses=[
+  {t:"Todo lo puedo en Cristo que me fortalece.",r:"Filipenses 4:13"},
+  {t:"Los que esperan en el Señor renovarán sus fuerzas.",r:"Isaías 40:31"},
+  {t:"Esfuérzate y sé valiente; no temas ni desmayes.",r:"Josué 1:9"},
+  {t:"El Señor es mi fortaleza y mi escudo.",r:"Salmo 28:7"},
+  {t:"Dios es quien me reviste de fuerza.",r:"Salmo 18:32"},
+  {t:"No nos cansemos de hacer el bien, porque a su tiempo cosecharemos.",r:"Gálatas 6:9"},
+  {t:"Este es el día que hizo el Señor; nos gozaremos y alegraremos en él.",r:"Salmo 118:24"},
+  {t:"Encomienda al Señor tus obras, y tus planes se cumplirán.",r:"Proverbios 16:3"}
+];
+const rnd=a=>a[Math.floor(Math.random()*a.length)];
+function finish(){
+  if(!selectedWeek)return;const s=getSession(selectedWeek),p=progress(selectedWeek),copy=JSON.parse(JSON.stringify(s));
+  copy.finishedAt=new Date().toISOString();copy.progress=p;data.history.push(copy);data.history=data.history.slice(-120);delete data.sessions[key(selectedWeek)];save();
+  document.getElementById("finishMessage").textContent=rnd(motivation);
+  document.getElementById("daughterMessage").textContent=rnd(daughter);
+  const v=rnd(verses);document.getElementById("verseMessage").textContent=`“${v.t}” — ${v.r}`;
+  document.getElementById("finishModal").classList.add("show")
+}
+function renderHistory(){
+  const b=document.getElementById("historyList");if(!data.history.length){b.innerHTML='<div class="info-card">Todavía no hay sesiones guardadas 🩵</div>';return}
+  b.innerHTML=[...data.history].reverse().map(s=>{const d=new Date((s.date||today())+"T12:00:00"),f=d.toLocaleDateString("es-CR",{weekday:"long",day:"2-digit",month:"long",year:"numeric"});return`<div class="history-card"><h3>Semana ${s.week}</h3><p>📅 ${f} · ${s.progress?.done||0}/${s.progress?.total||0} series · ${s.progress?.pct||0}%</p></div>`}).join("")
+}
+function show(name){document.querySelectorAll(".screen").forEach(x=>x.classList.remove("active"));document.getElementById(name+"Screen").classList.add("active");document.querySelectorAll(".nav").forEach(x=>x.classList.toggle("active",x.dataset.nav===name));if(name==="home")renderWeeks();if(name==="history")renderHistory();window.scrollTo({top:0,behavior:"smooth"})}
+
+
+const timerModal=document.getElementById("timerModal");
+const timerDisplay=document.getElementById("timerDisplay");
+let timerSeconds=60;
+let timerId=null;
+
+function drawTimer(){
+  const m=Math.floor(timerSeconds/60);
+  const s=timerSeconds%60;
+  timerDisplay.textContent=String(m).padStart(2,"0")+":"+String(s).padStart(2,"0");
+}
+document.getElementById("timerFab").onclick=()=>{timerModal.classList.add("show");drawTimer()};
+document.getElementById("timerClose").onclick=()=>timerModal.classList.remove("show");
+document.querySelectorAll("[data-time]").forEach(btn=>{
+  btn.onclick=()=>{
+    clearInterval(timerId);timerId=null;
+    timerSeconds=Number(btn.dataset.time);
+    drawTimer();
+    document.getElementById("timerStart").textContent="Iniciar";
+  };
+});
+document.getElementById("timerStart").onclick=()=>{
+  const btn=document.getElementById("timerStart");
+  if(timerId){
+    clearInterval(timerId);timerId=null;btn.textContent="Continuar";return;
+  }
+  if(timerSeconds<=0)timerSeconds=60;
+  btn.textContent="Pausar";
+  timerId=setInterval(()=>{
+    timerSeconds--;
+    drawTimer();
+    if(timerSeconds<=0){
+      clearInterval(timerId);timerId=null;
+      btn.textContent="Iniciar";
+      if(navigator.vibrate) navigator.vibrate([180,100,180]);
+      alert("¡Descanso terminado, Jenny! 🩵");
+    }
+  },1000);
+};
+
+const workoutDateInput=document.getElementById("workoutDate");
+workoutDateInput.value=selectedDate;
+workoutDateInput.addEventListener("change",()=>{
+  if(!workoutDateInput.value)return;
+  selectedDate=workoutDateInput.value;
+  if(selectedWeek){
+    getSession(selectedWeek);
+    renderWeek();
+  }
+});
+
+document.getElementById("homeBtn").onclick=()=>show("home");
+document.getElementById("backBtn").onclick=()=>show("home");
+document.getElementById("finishBtn").onclick=finish;
+document.getElementById("resetBtn").onclick=()=>{if(selectedWeek&&confirm("¿Reiniciar la rutina de hoy?")){data.sessions[key(selectedWeek)]=newSession(selectedWeek);save();renderWeek()}};
+document.getElementById("finishClose").onclick=()=>{document.getElementById("finishModal").classList.remove("show");selectedWeek=null;show("history")};
+document.querySelectorAll(".nav").forEach(b=>b.onclick=()=>show(b.dataset.nav));
+renderWeeks();
+</script>
+<script>
+if ('serviceWorker' in navigator && location.protocol.startsWith('http')) {
+  window.addEventListener('load', async () => {
+    try {
+      const reg = await navigator.serviceWorker.register('./sw.js?v=5', { updateViaCache: 'none' });
+      await reg.update();
+      if (reg.waiting) reg.waiting.postMessage('SKIP_WAITING');
+      navigator.serviceWorker.addEventListener('controllerchange', () => {
+        if (!sessionStorage.getItem('jenny-v4-reloaded')) {
+          sessionStorage.setItem('jenny-v4-reloaded', '1');
+          location.reload();
+        }
+      });
+    } catch(e) {}
+  });
+}
+</script>
+</body>
+</html>
