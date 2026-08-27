@@ -85,7 +85,7 @@ button{cursor:pointer}
   overflow:hidden;
   background:linear-gradient(145deg,#f7fbff,#edf8ff);
 }
-.exercise-visual svg{display:block;width:100%;height:auto}
+.exercise-visual svg{display:block;width:100%;height:auto}.exercise-photo{display:block;width:100%;max-height:270px;object-fit:contain;border-radius:14px;background:#fff}.history-actions{display:flex;gap:10px;margin-top:12px}.history-actions button{flex:1;border-radius:11px;padding:10px 12px;font-weight:800;font-size:12px;cursor:pointer}.history-edit{border:1px solid #8fc6e8;background:#eef8fe;color:#2f6f9c}.history-delete{border:1px solid #e6a1a1;background:#fff5f5;color:#b84949}
 .exercise-benefit{
   margin:10px 0 12px;
   padding:12px 13px;
@@ -400,6 +400,9 @@ function exerciseHelp(name){
 
 function exerciseDrawing(name){
   const n=name.toLowerCase();
+  if(n.includes("sentadilla")) return `<img class="exercise-photo" src="sentadilla.jpeg" alt="Demostración clara de sentadilla">`;
+  if(n.includes("elevación lateral")) return `<img class="exercise-photo" src="elevacion-lateral.jpeg" alt="Demostración clara de elevación lateral de pierna">`;
+  if(n.includes("puente")) return `<img class="exercise-photo" src="puente.jpeg" alt="Demostración clara de puente de glúteos">`;
   const info=exerciseHelp(name);
   const dark="#35566d", blue="#62ace0", light="#dff2ff", skin="#f2b38f", mat="#bfe0f3";
 
@@ -550,9 +553,26 @@ function renderHistory(){
       return `<div class="history-exercise"><div class="history-exercise-title"><span>${esc(ex.name||base?.name||`Ejercicio ${ei+1}`)}</span><span class="history-status ${ex.skipped?"skipped":""}">${ex.skipped?"Omitido":(ex.sets||[]).every(x=>x.done)?"Completado":"Parcial"}</span></div>${sets}${base?.note?`<div class="history-note"><strong>Indicación:</strong> ${esc(base.note)}</div>`:""}${note}</div>`;
     }).join("");
     const walk=r?.walk?`<div class="history-walk">🚶 ${esc(r.walk)} · ${s.walkDone?"Completada ✓":"No marcada"}</div>`:"";
-    return `<div class="history-card" data-history="${idx}"><div class="history-summary"><div><h3>Semana ${esc(s.week)} — ${esc((r?.title||"").split("—")[1]?.trim()||"")}</h3><p>📅 ${f} · ${s.progress?.done||0}/${s.progress?.total||0} series · ${s.progress?.pct||0}%</p></div><span class="history-arrow">⌄</span></div><div class="history-detail">${exercises}${walk}</div></div>`;
+    const realIndex=data.history.length-1-idx;
+    return `<div class="history-card" data-history="${realIndex}"><div class="history-summary"><div><h3>Semana ${esc(s.week)} — ${esc((r?.title||"").split("—")[1]?.trim()||"")}</h3><p>📅 ${f} · ${s.progress?.done||0}/${s.progress?.total||0} series · ${s.progress?.pct||0}%</p></div><span class="history-arrow">⌄</span></div><div class="history-detail">${exercises}${walk}<div class="history-actions"><button class="history-edit" data-edit-history="${realIndex}">✏️ Editar</button><button class="history-delete" data-delete-history="${realIndex}">🗑️ Eliminar</button></div></div></div>`;
   }).join("");
   b.querySelectorAll(".history-summary").forEach(x=>x.onclick=()=>x.closest(".history-card").classList.toggle("open"));
+  b.querySelectorAll("[data-edit-history]").forEach(btn=>btn.onclick=e=>{
+    e.stopPropagation();
+    const i=Number(btn.dataset.editHistory),item=data.history[i];
+    if(!item)return;
+    selectedDate=item.date||today();selectedWeek=Number(item.week);
+    const restored=normalizeSession(JSON.parse(JSON.stringify(item)));
+    delete restored.finishedAt;delete restored.progress;
+    data.sessions[selectedDate+"_w"+selectedWeek]=restored;
+    data.history.splice(i,1);save();openWeek(selectedWeek);
+  });
+  b.querySelectorAll("[data-delete-history]").forEach(btn=>btn.onclick=e=>{
+    e.stopPropagation();
+    const i=Number(btn.dataset.deleteHistory);
+    if(!data.history[i])return;
+    if(confirm("¿Seguro que deseas eliminar este entrenamiento del historial?")){data.history.splice(i,1);save();renderHistory();}
+  });
 }
 function show(name){document.querySelectorAll(".screen").forEach(x=>x.classList.remove("active"));document.getElementById(name+"Screen").classList.add("active");document.querySelectorAll(".nav").forEach(x=>x.classList.toggle("active",x.dataset.nav===name));if(name==="home")renderWeeks();if(name==="history")renderHistory();window.scrollTo({top:0,behavior:"smooth"})}
 
